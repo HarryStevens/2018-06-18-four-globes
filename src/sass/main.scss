@@ -1,0 +1,142 @@
+@import 'feta';
+@import 'reset';
+@import "spinnyGlobe";
+
+html, body {
+	margin: 0;
+	padding: 0;
+  width: auto;
+  height: auto;
+  max-width: 900px;
+}
+
+#legend {
+	margin: 0 auto;
+	display: table;
+	margin-bottom: 20px;
+}
+#legend .line {
+	stroke: #4a4a4a;
+}
+#legend .label {
+	font-family: $mono;
+	font-size: 14px;
+	fill: $color-gray-800;	
+	text-anchor: middle;
+}
+
+.chart-container {
+	width: 100%;
+	text-align: center;
+	max-width: 900px;
+
+	.chart {
+		display: inline-block;
+		width: 100%;
+
+
+		.axis {
+			text {
+				font-family: $mono;
+				fill: $color-gray-600;
+				pointer-events: none;
+			}
+
+			.tick text {
+				font-size: 12px;
+			}
+
+			line, path {
+				stroke: $color-gray-300;
+				stroke-width: .5;
+				pointer-events: none;
+			}
+
+			.domain {
+				display: none;
+			}
+		}
+	}
+}
+
+.headline {
+	font-family: $sans;
+	font-size: 16px;
+	line-height: 25px;
+	font-weight: 500;
+	color: $color-gray-800;
+	margin-bottom: 10px;
+	text-align: center;
+}
+.headline-section {
+	display: inline-block;
+}
+.headline-section:first-of-type {
+	margin-right: 4px;
+}
+
+.headline-units {
+	font-family: $mono;
+	font-size: 14px;
+	line-height: 22px;
+	color: $color-gray-600;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+.subhead {
+	font-family: $sans;
+	font-size: 11px;
+	line-height: 16px;
+	font-weight: 500;
+	letter-spacing: 1.1px;
+	color: $color-gray-800;
+	text-transform: uppercase;
+	text-align: center;
+	margin-bottom: 8px;
+}
+
+.axis-label {
+	font-family: $mono;
+	font-size: 14px;
+	line-height: 20px;
+	color: $color-gray-800;
+}
+
+.annotation {
+	font-family: $sans;
+	font-size: 14px;
+	line-height: 22px;
+	color: $color-gray-800;
+}
+
+.annotation--bold {
+	font-family: $sans;
+	font-weight: 500;
+	font-size: 14px;
+	line-height: 22px;
+	color: $color-gray-800;
+}
+
+.annotation--number {
+	font-family: $mono;
+	font-size: 16px;
+	line-height: 22px;
+	color: $color-purple-500;
+}
+
+.sphere {
+	fill: none;
+	stroke: #000;
+	stroke-opacity: .2;
+}
+
+.globe-title {
+	text-align: center;
+	color: $color-gray-800;
+}
+
+.notes {
+	font-family: $sans;
+	font-size: 10px;
+}

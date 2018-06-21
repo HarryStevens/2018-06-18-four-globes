@@ -1,0 +1,15 @@
+{
+  "project": {
+    "name": "2018 06 18 four globes",
+    "slug": "2018-06-18-four-globes"
+  },
+  "s3": {
+    "bucket": "graphics.axios.com",
+    "folder": "2018-06-18-four-globes"
+  },
+  "files": [],
+  "isFullbleed": false,
+  "appleFallback": "fallbacks/2018-06-18-four-globes-apple.png",
+  "newsletterFallback": "fallbacks/2018-06-18-four-globes-fallback.png",
+  "embedVersion": "1.0"  
+}

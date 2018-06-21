@@ -1,0 +1,61 @@
+@import 'feta';
+
+/* Containers */
+.globe-container {
+  width: 100%;
+  max-width: 900px;
+}
+.globe {
+  display: inline-block;
+  width: calc(50% - 2px);
+  vertical-align: top;
+  margin-bottom: 20px;
+}
+/*@media only screen and (max-width: 400px){
+  .globe {
+    width: calc(100%);
+  }
+}
+*/
+
+/* Raster */
+.globe-container canvas {
+  position: absolute;
+  z-index: -1;
+}
+
+/* Vector */
+.globe-container svg {
+  cursor: move;
+  margin: 0 auto;
+  display: table;
+}
+.globe-container .country, .globe-container .boundary {
+  fill: none;
+  stroke: #000;
+}
+.globe-container .country {
+  stroke-opacity: .05;
+}
+.globe-container .boundary {
+  stroke-opacity: .25;
+}
+
+/* Icon */
+.globe-container .spin-me {
+  position: absolute;
+  text-align: center;
+}
+.globe-container .spin-me img {
+  width: 38px;
+}
+.globe-container .spin-me .spin-text {
+  font-family: $mono;
+  font-size: 12px;
+}
+.globe-container .spin-me .spin-section {
+  display: inline-block;
+}
+.globe-container .spin-me .spin-section:first-of-type {
+  margin-right: 7px;
+}
