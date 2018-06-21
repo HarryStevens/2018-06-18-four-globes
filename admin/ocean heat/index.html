@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      margin: 0;
+    }
+    .polygon {
+      fill: none;
+      stroke-width: .5px;
+      stroke-dasharray: 5, 5;
+    }
+    .boundary {
+      fill: none;
+      stroke: #000;
+      stroke-width: 1px;
+    }
+  </style>
+</head>
+<body>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://d3js.org/d3-contour.v1.min.js"></script>
+  <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+  <script src="https://unpkg.com/topojson@3"></script>
+  <script>
+    var type = "ocean";
+
+    var width = window.innerWidth, 
+        height = window.innerHeight;
+
+    var svg = d3.select("body").append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    var clipPath = svg.append("clipPath")
+        .attr("id", "clipPath");
+
+    var projection = d3.geoEquirectangular();
+        path = d3.geoPath(projection);
+
+    var n = 360, m = 180;
+
+    var contourGenerator = d3.contours()
+      .size([n, m])
+      .thresholds(30);
+
+    var colors = {
+      ocean: ['#ffffcc','#ffeda0','#fed976','#feb24c','#fd8d3c','#fc4e2a','#e31a1c','#bd0026','#800026']
+    };
+    var domain = {
+      ocean: [-20, -10, -5, -2.5, 0, 2.5, 5, 10, 20, 40]
+    };
+
+    var colorScale = d3.scaleLinear()
+      .interpolate(d3.interpolateLab)
+      .range(colors[type])
+      .domain(domain[type]);
+
+    d3.queue()
+        .defer(d3.json, "countries.json")
+        .defer(d3.json, "data-2017.json")
+        .await(ready);
+
+    function ready(error, world, values){
+      // Coerce min and max value to -2 and 2.
+      var ext = 40;
+      values = rotate(values.map(d => d >= ext ? ext : d <= -ext ? -ext : d));
+
+      var feature = topojson.feature(world, world.objects.countries),
+          mesh = topojson.mesh(world, world.objects.land, (a, b) => a === b);
+
+      draw();
+
+      window.onresize = () => draw();
+
+      function draw(){
+        width = window.innerWidth, height = window.innerHeight;
+        svg.attr("width", width).attr("height", height);
+        projection.fitSize([width, height], feature);
+
+        var contours = svg.selectAll(".contour")
+            .data(contourGenerator(values).map(invert));
+
+        contours.enter().append("path")
+            .attr("class", "contour")
+            .attr("fill", d => colorScale(d.value))
+          .merge(contours)
+            .attr("transform", "scale(1, -1) translate(0, " + (-height * .98) + ")") // TODO: Figure out why my data is updside down.
+            .attr("d", path);
+        
+        // var polygons = svg.selectAll(".polygon")
+        //     .data(feature.features);
+
+        // polygons.enter().append("path")
+        //     .attr("class", "polygon")
+        //     .style("stroke", d => d.id === 10 ? "#fff" : "4a4a4a") // Remove Antarctica's stroke.
+        //   .merge(polygons)
+        //     .attr("d", path);
+
+        // var boundary = svg.selectAll(".boundary")
+        //     .data([mesh]);
+
+        // boundary.enter().append("path")
+        //     .attr("class", "boundary")
+        //   .merge(boundary)
+        //     .attr("d", path);
+      }
+
+      // See: https://bl.ocks.org/mbostock/83c0be21dba7602ee14982b020b12f51
+      function invert(d) {
+        var shared = {};
+        var p = {
+          type: "Polygon",
+          coordinates: d3.merge(d.coordinates.map(function(polygon) {
+            return polygon.map(function(ring) {
+              return ring.map(function(point) {
+                return [point[0] / n * 360 - 180, 90 - point[1] / m * 180];
+              }).reverse();
+            });
+          }))
+        };
+        // Record the y-intersections with the antimeridian.
+        p.coordinates.forEach(function(ring) {
+          ring.forEach(function(p) {
+            if (p[0] === -180) shared[p[1]] |= 1;
+            else if (p[0] === 180) shared[p[1]] |= 2;
+          });
+        });
+        // Offset any unshared antimeridian points to prevent their stitching.
+        p.coordinates.forEach(function(ring) {
+          ring.forEach(function(p) {
+            if ((p[0] === -180 || p[0] === 180) && shared[p[1]] !== 3) {
+              p[0] = p[0] === -180 ? -179.9995 : 179.9995;
+            }
+          });
+        });
+        p = d3.geoStitch(p);
+        // If the MultiPolygon is empty, treat it as the Sphere.
+        return p.coordinates.length
+            ? {type: "Polygon", coordinates: p.coordinates, value: d.value}
+            : {type: "Sphere", value: d.value};
+      }
+
+      // Rotate a GeoTIFF’s longitude from [0, 360] to [-180, +180].
+      function rotate(values) {
+        var l = n >> 1;
+        for (var j = 0, k = 0; j < m; ++j, k += n) {
+          values.slice(k, k + l).reverse();
+          values.slice(k + l, k + n).reverse();
+          values.slice(k, k + n).reverse();
+        }
+        return values;
+      }
+
+      // Rotate 180 degrees
+      function rotate(values){
+        for (var j = 0; j < m; j++) {
+          var v = values.slice(j * n, (j+1) * n);
+          for (var i = 0; i < n; i++) {
+            values[j * n + i] = v[ (i + 180) % n ];
+          }
+        }
+        return values;
+      }
+
+      function topdown(values) {
+        var v = new Float32Array(values);
+        for (var j = 0; j < m; j++) {
+          for (var i = 0; i < n; i++) {
+            v[ (m-1-j) * n + i ] = values[ j * n + i ];
+          }
+        }
+        return v;
+      }
+
+      // torus: copy left column to the right
+      function cylinder(values) {
+        var v = new Float32Array(m * (n+1));
+        for (var j = 0; j < m; j++) {
+          for (var i = 0; i < n + 1; i++) {
+            v[ j * (n+1) + i ] = values[ j * n + i%n ];
+           }
+       }
+       return v;
+      }
+
+    }
+  </script>
+</body>
+</html>
