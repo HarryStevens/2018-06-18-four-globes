@@ -16,6 +16,8 @@ class spinnyGlobe {
     var arr = [];
 
     d3.json(options.vector).then(jsonLoaded);
+    d3.select(".spin-me").style("display", "none");
+    d3.select("body").style("margin-top", "50px");
 
     function jsonLoaded(map){
       var feature = topojson.feature(map, map.objects.countries),

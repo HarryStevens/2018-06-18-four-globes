@@ -9,7 +9,7 @@
   },
   "files": [],
   "isFullbleed": false,
-  "appleFallback": "fallbacks/2018-06-18-four-globes-apple.png",
-  "newsletterFallback": "fallbacks/2018-06-18-four-globes-fallback.png",
+  "appleFallback": "fallbacks/2018-06-18-four-globes-apple.gif",
+  "newsletterFallback": "fallbacks/2018-06-18-four-globes-fallback.gif",
   "embedVersion": "1.0"  
 }
