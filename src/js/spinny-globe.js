@@ -163,7 +163,7 @@ class spinnyGlobe {
           .style("top", (container_width < 400 ? container_top - 10 : container_top) + "px");
       }   
 
-      var speed = .2;
+      var speed = options.isMobile ? .4 : .2;
       var timer = d3.timer(() => {
         redraw();
       });

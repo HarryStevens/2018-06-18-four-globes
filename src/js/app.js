@@ -30,12 +30,12 @@ function main() {
       {
         globeid: "a",
         element: document.querySelector(".globe-1"),
-        raster: "img/pre-1988-scaled-2048-blurred.jpg"
+        raster: "img/pre-1988-scaled-" + (isMobile ? 1024 : 2048) + "-blurred.jpg"
       },
       {
         globeid: "b",
         element: document.querySelector(".globe-2"),
-        raster: "img/post-1988-scaled-2048-blurred.jpg"
+        raster: "img/post-1988-scaled-" + (isMobile ? 1024 : 2048) + "-blurred.jpg"
       }
     ]
   });
