@@ -125,6 +125,7 @@ class spinnyGlobe {
         var container_width = +keepNumber(d3.select(".globe-container").style("width"));
         var container_height = +keepNumber(d3.select(".globe-container").style("height"));
         var container_top = d3.select(".globe-container").node().getBoundingClientRect().top;
+        var container_left = d3.select(".globe-container").node().getBoundingClientRect().left || d3.select(".globe-container").node().getBoundingClientRect().x;
 
         var w = Math.min(+keepNumber(d3.select(options.globes[0].element).style("width")), 500), h = window.innerHeight;
         var width = Math.min(w * (window.innerWidth < 400 ? .9 : .9), h),
@@ -159,7 +160,7 @@ class spinnyGlobe {
         var spin_me = d3.select(".spin-me");
         var spin_me_width = spin_me.node().getBoundingClientRect().width;
         spin_me
-          .style("left", (container_width / 2) - (spin_me_width / 2) + "px")
+          .style("left", container_left + (container_width / 2) - (spin_me_width / 2) + "px")
           .style("top", (container_width < 400 ? container_top - 10 : container_top) + "px");
       }   
 
