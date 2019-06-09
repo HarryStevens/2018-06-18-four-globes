@@ -101,7 +101,9 @@ class spinnyGlobe {
         obj.context.texParameteri(obj.context.TEXTURE_2D, obj.context.TEXTURE_MAG_FILTER, obj.context.LINEAR);
         obj.context.texParameteri(obj.context.TEXTURE_2D, obj.context.TEXTURE_MIN_FILTER, obj.context.LINEAR_MIPMAP_LINEAR);
         obj.context.texImage2D(obj.context.TEXTURE_2D, 0, obj.context.RGBA, obj.context.RGBA, obj.context.UNSIGNED_BYTE, obj.image);
-        obj.context.generateMipmap(obj.context.TEXTURE_2D);
+        obj.context.texParameteri(obj.context.TEXTURE_2D, obj.context.TEXTURE_WRAP_S, obj.context.CLAMP_TO_EDGE);
+        obj.context.texParameteri(obj.context.TEXTURE_2D, obj.context.TEXTURE_WRAP_T, obj.context.CLAMP_TO_EDGE);
+        obj.context.texParameteri(obj.context.TEXTURE_2D, obj.context.TEXTURE_MIN_FILTER, obj.context.LINEAR); // or NEAREST
 
         obj.context.uniform3fv(obj.rotateUniform, projection.rotate()); // Three-axis rotation
         obj.context.bindTexture(obj.context.TEXTURE_2D, obj.texture); // XXX Safari
